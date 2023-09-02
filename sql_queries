@@ -1,0 +1,118 @@
+#view dataset
+SELECT * FROM dataset;
+
+#count total number of episodes in the dataset using count and max functions
+select count(distinct epno) as total_episodes from dataset;
+select max(epno) as total_episodes from dataset;
+
+#count total number of pitches 
+select count(distinct Brand) as total_pitches from dataset;
+
+#count total number of pitches converted (i.e number of pitches that were invested in by the sharks)
+/* using simple query */
+select count(Amount_Invested_lakhs) as pitches_converted from dataset where Amount_Invested_lakhs<>0;
+select count(*) as pitches_converted from dataset where Deal<>"No Deal";
+
+/* using CTE */
+with a as(
+select Amount_Invested_lakhs,
+case 
+when Amount_Invested_lakhs>0 then 1
+else 0
+end as convertednotconverted
+from dataset)
+select sum(convertednotconverted) as pitches_converted from a;
+
+/* using Subquery */
+select sum(a.convertednotconverted) as pitches_converted from (
+select Amount_Invested_lakhs,
+case 
+when Amount_Invested_lakhs>0 then 1
+else 0
+end as convertednotconverted
+from dataset) a;
+
+#Ratio of pitches converted to the total pitches
+with a as(
+select Amount_Invested_lakhs,
+case 
+when Amount_Invested_lakhs>0 then 1
+else 0
+end as convertednotconverted
+from dataset)
+select sum(convertednotconverted)/count(*) from a;
+
+#Total male participants
+Select sum(Male) as male_participants from dataset;
+
+#Total Female participants
+Select sum(Female) as female_participants from dataset;
+
+#Gender Ratio
+select sum(Male)/sum(Female) as gender_ratio from dataset;
+
+#Total amount invested by all the sharks
+select sum(Amount_Invested_lakhs) as total_amount_invested_in_lakhs from dataset;
+
+#Average equity taken in terms of percentage
+/* using subquery */
+select avg(a.EquityTakenP) from (select * from dataset where EquityTakenP != 0) a;
+
+/* using CTE */
+with a as 
+(select * from dataset where EquityTakenP != 0)
+select avg(EquityTakenP) from a;
+
+#highest amount invested in a company in lakhs
+select max(Amount_Invested_lakhs) from dataset;
+
+#highest equity taken in percentage
+select max(EquityTakenP) from dataset; 
+
+#Number of pitches having atleast 1 women
+select count(*) from dataset where Female>0; 
+
+#Out of all the pitches converted,number of pitches that have atleast 1 women
+/*using CTE*/
+with a as(
+select * from dataset
+where female>0),
+b as(
+select * from dataset
+where Amount_Invested_lakhs>0)
+select count(*) 
+from a join b
+on a.Brand = b.Brand;
+
+/*using subquerie*/
+select sum(b.female_count) 
+from (select 
+case
+when a.Female>0 then 1
+else 0
+end as female_count,a.* from (select * from dataset where Deal!="No Deal") a )b;
+
+#average number of team members in a team
+select avg(team_members) from dataset;
+
+#average amount invested per deal
+select avg(a.Amount_Invested_lakhs) as amount_invested_per_deal from(
+select * from dataset where Amount_Invested_lakhs!= "No Deal") a ;
+
+#Most frequent age groups of people who pitched their ideas
+select Avgage as average_age,count(Avgage) as count from dataset group by Avgage order by count desc;
+
+#Most popular cities for startups
+select Location as Locations,count(Location) as count from dataset group by Location order by count desc;
+
+#Most Popular sectors amoung pitchers
+select Sector as Sector,count(Sector) as count from dataset group by Sector order by count desc;
+
+#Showing all partner deals
+select Partners,count(Partners) as count from dataset where Partners!=NULL group by Partners order by count desc;
+
+#Startups in each sector that got the highest investment amount
+select c.* from 
+(select Brand,Sector,Amount_Invested_lakhs,rank() over(partition by Sector order by Amount_Invested_lakhs desc) rnk 
+from dataset) c
+where c.rnk=1
