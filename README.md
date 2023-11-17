@@ -24,5 +24,6 @@ The repository is organized as follows:
 - `sql_queries/`: Contains SQL queries used for data extraction and analysis.
 - `sharktankresults/`: Contains the summarized results in the form of an Excel sheet.
 - `README.md`: The main documentation file you are currently reading.
+-  `Insights/`:contains some of insights derived from the results presented in sharktankresults.
 
 Hope you find this project insightful and informative!
