@@ -22,7 +22,7 @@ The dataset used for this project is the Shark Tank India dataset from it's wiki
 The repository is organized as follows:
 - `dataset/`:contains cleaned dataset used for the project.
 - `sql_queries/`: Contains SQL queries used for data extraction and analysis.
-- `results/`: Contains the summarized results in the form of an Excel sheet.
+- `sharktankresults/`: Contains the summarized results in the form of an Excel sheet.
 - `README.md`: The main documentation file you are currently reading.
 
 Hope you find this project insightful and informative!
