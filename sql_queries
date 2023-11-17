@@ -122,8 +122,3 @@ select count(ashneeramountinvested) from dataset where ashneeramountinvested is 
 select sum(c.ashneeramountinvested),avg(c.ashneerequitytakenp) 
 from (select * from dataset  where ashneerequitytakenp!=0 and ashneerequitytakenp is not null) c
 
-#Startups in each sector that got the highest investment amount
-select c.* from 
-(select Brand,Sector,Amount_Invested_lakhs,rank() over(partition by Sector order by Amount_Invested_lakhs desc) rnk 
-from dataset) c
-where c.rnk=1
