@@ -111,6 +111,17 @@ select Sector as Sector,count(Sector) as count from dataset group by Sector orde
 #Showing all partner deals
 select Partners,count(Partners) as count from dataset where Partners!=NULL group by Partners order by count desc;
 
+#Finding out total episodes done, total deals done, average equity taken, and total amount invested by each shark(Let's do it for Shark Ashneer here)
+#Total Episodes
+select count(ashneeramountinvested) from dataset where ashneeramountinvested is not null;
+
+#Total Deals
+select count(ashneeramountinvested) from dataset where ashneeramountinvested is not null AND ashneeramountinvested!=0;
+
+#Total Amount Invested and Average Equity Taken
+select sum(c.ashneeramountinvested),avg(c.ashneerequitytakenp) 
+from (select * from dataset  where ashneerequitytakenp!=0 and ashneerequitytakenp is not null) c
+
 #Startups in each sector that got the highest investment amount
 select c.* from 
 (select Brand,Sector,Amount_Invested_lakhs,rank() over(partition by Sector order by Amount_Invested_lakhs desc) rnk 
